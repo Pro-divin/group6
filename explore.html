@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image</title>
+</head>
+<body>
+    <h1>Upload an Image</h1>
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        {% csrf_token %}
+        <input type="text" name="value" placeholder="Value to push" required>
+        <button type="submit" name="action" value="push">Push</button>
+        <button type="submit" name="action" value="pop">Pop</button>
+        <button type="submit">Upload</button>
+    </form>
+    <h1>Redo Deleted Photos</h1>
+    <ul>
+        {% for photo in deleted_photos %}
+            <li>
+                {{ photo.firstname }} {{ photo.lastname }} (Deleted on {{ photo.creation_date }})
+                <form method="POST" action="{% url 'redo_photo' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="photo_id" value="{{ photo.id }}">
+                    <button type="submit">Restore</button>
+                </form>
+            </li>
+        {% empty %}
+            <li>No deleted photos.</li>
+        {% endfor %}
+    </ul>
+    <a href="index.html">Back to Gallery</a>
+</body>
+</html>
